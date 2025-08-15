@@ -191,6 +191,8 @@ const LoginPage = () => {
         name: mockUsers[email]?.name || 'User Name' 
       };
       login(userData);
+      // Force navigation to dashboard
+      window.location.href = '/dashboard';
     }
   };
 
