@@ -818,6 +818,12 @@ const AuthProvider = ({ children }) => {
   );
 };
 
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/login" replace />;
+};
+
 // Main App Component
 function App() {
   return (
@@ -826,7 +832,11 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>
