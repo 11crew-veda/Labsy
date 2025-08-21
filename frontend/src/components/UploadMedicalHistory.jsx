@@ -40,7 +40,7 @@ export default function UploadMedicalHistory() {
     formData.append("medicalHistory", medicalHistory);
     if (file) formData.append("file", file);
     try {
-      await axios.post("/upload", formData, {
+      await axios.post("http://localhost:4000/api/medical/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Upload successful!");
@@ -55,7 +55,7 @@ export default function UploadMedicalHistory() {
   const handleGetHash = async () => {
     setHashLoading(true);
     try {
-      const res = await axios.get("/upload/hash");
+      const res = await axios.get("http://localhost:4000/api/medical/upload/hash");
       setHash(res.data.hash);
     } catch (err) {
       alert("Failed to fetch hash!");
