@@ -1,31 +1,51 @@
-import React, { useState, useContext, createContext } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import './App.css';
+import React, { useState, useContext, createContext } from "react";
+import UploadMedicalHistory from "./components/UploadMedicalHistory";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "./App.css";
 
 // UI Components
-import { Button } from './components/ui/button';
-import { Input } from './components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
-import { Badge } from './components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
-import { Progress } from './components/ui/progress';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './components/ui/table';
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/ui/select";
+import { Badge } from "./components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "./components/ui/avatar";
+import { Progress } from "./components/ui/progress";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./components/ui/table";
 
 // Icons
-import { 
-  Bell, 
-  User, 
-  Settings, 
-  LogOut, 
-  Search, 
-  Plus, 
-  Eye, 
-  Check, 
-  X, 
-  Upload, 
-  Download, 
+import {
+  Bell,
+  User,
+  Settings,
+  LogOut,
+  Search,
+  Plus,
+  Eye,
+  Check,
+  X,
+  Upload,
+  Download,
   QrCode,
   Activity,
   Users,
@@ -38,8 +58,8 @@ import {
   UserCheck,
   Building2,
   Microscope,
-  ClipboardCheck
-} from 'lucide-react';
+  ClipboardCheck,
+} from "lucide-react";
 
 // Auth Context
 const AuthContext = createContext();
@@ -47,37 +67,70 @@ const AuthContext = createContext();
 const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
 // Mock Data
 const mockUsers = {
-  'admin@hospital.com': { role: 'Hospital Admin', name: 'Dr. Sarah Johnson' },
-  'nurse@hospital.com': { role: 'Nurse', name: 'Maria Garcia' },
-  'doctor@hospital.com': { role: 'Doctor', name: 'Dr. Michael Chen' },
-  'patient@example.com': { role: 'Patient', name: 'John Smith' },
-  'lab@hospital.com': { role: 'Lab Scientist', name: 'Dr. Emily Davis' },
-  'supervisor@pharma.com': { role: 'Supervisor', name: 'Robert Wilson' }
+  "admin@hospital.com": { role: "Hospital Admin", name: "Dr. Sarah Johnson" },
+  "nurse@hospital.com": { role: "Nurse", name: "Maria Garcia" },
+  "doctor@hospital.com": { role: "Doctor", name: "Dr. Michael Chen" },
+  "patient@example.com": { role: "Patient", name: "John Smith" },
+  "lab@hospital.com": { role: "Lab Scientist", name: "Dr. Emily Davis" },
+  "supervisor@pharma.com": { role: "Supervisor", name: "Robert Wilson" },
 };
 
 const mockTrials = [
-  { id: 'TRL-001', name: 'COVID-19 Vaccine Phase III', patients: 245, status: 'Active' },
-  { id: 'TRL-002', name: 'Diabetes Drug Trial', patients: 128, status: 'Active' },
-  { id: 'TRL-003', name: 'Heart Disease Prevention', patients: 89, status: 'Recruiting' }
+  {
+    id: "TRL-001",
+    name: "COVID-19 Vaccine Phase III",
+    patients: 245,
+    status: "Active",
+  },
+  {
+    id: "TRL-002",
+    name: "Diabetes Drug Trial",
+    patients: 128,
+    status: "Active",
+  },
+  {
+    id: "TRL-003",
+    name: "Heart Disease Prevention",
+    patients: 89,
+    status: "Recruiting",
+  },
 ];
 
 const mockPatients = [
-  { id: 'P-001', name: 'Alice Johnson', trial: 'TRL-001', status: 'Active', lastVisit: '2024-01-15' },
-  { id: 'P-002', name: 'Bob Williams', trial: 'TRL-002', status: 'Pending', lastVisit: '2024-01-12' },
-  { id: 'P-003', name: 'Carol Brown', trial: 'TRL-001', status: 'Completed', lastVisit: '2024-01-10' }
+  {
+    id: "P-001",
+    name: "Alice Johnson",
+    trial: "TRL-001",
+    status: "Active",
+    lastVisit: "2024-01-15",
+  },
+  {
+    id: "P-002",
+    name: "Bob Williams",
+    trial: "TRL-002",
+    status: "Pending",
+    lastVisit: "2024-01-12",
+  },
+  {
+    id: "P-003",
+    name: "Carol Brown",
+    trial: "TRL-001",
+    status: "Completed",
+    lastVisit: "2024-01-10",
+  },
 ];
 
 // Components
 const Header = () => {
   const { user, logout } = useAuth();
-  
+
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -90,7 +143,7 @@ const Header = () => {
             {user?.role}
           </Badge>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           <Button variant="ghost" size="sm">
             <Bell className="h-5 w-5" />
@@ -99,7 +152,12 @@ const Header = () => {
             <LogOut className="h-5 w-5" />
           </Button>
           <Avatar>
-            <AvatarFallback>{user?.name?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+            <AvatarFallback>
+              {user?.name
+                ?.split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </AvatarFallback>
           </Avatar>
         </div>
       </div>
@@ -109,48 +167,48 @@ const Header = () => {
 
 const Sidebar = () => {
   const { user } = useAuth();
-  
+
   const menuItems = {
-    'Hospital Admin': [
-      { icon: Activity, label: 'Dashboard', path: '/dashboard' },
-      { icon: Users, label: 'Users', path: '/users' },
-      { icon: FileText, label: 'Trials', path: '/trials' },
-      { icon: TestTube, label: 'Blood Tests', path: '/tests' },
-      { icon: QrCode, label: 'QR Codes', path: '/qr' },
-      { icon: FileText, label: 'Reports', path: '/reports' },
-      { icon: Settings, label: 'Settings', path: '/settings' }
+    "Hospital Admin": [
+      { icon: Activity, label: "Dashboard", path: "/dashboard" },
+      { icon: Users, label: "Users", path: "/users" },
+      { icon: FileText, label: "Trials", path: "/trials" },
+      { icon: TestTube, label: "Blood Tests", path: "/tests" },
+      { icon: QrCode, label: "QR Codes", path: "/qr" },
+      { icon: FileText, label: "Reports", path: "/reports" },
+      { icon: Settings, label: "Settings", path: "/settings" },
     ],
-    'Doctor': [
-      { icon: Activity, label: 'Dashboard', path: '/dashboard' },
-      { icon: Users, label: 'Patients', path: '/patients' },
-      { icon: TestTube, label: 'Blood Tests', path: '/tests' },
-      { icon: FileText, label: 'Reports', path: '/reports' },
-      { icon: Shield, label: 'Verification', path: '/verification' }
+    Doctor: [
+      { icon: Activity, label: "Dashboard", path: "/dashboard" },
+      { icon: Users, label: "Patients", path: "/patients" },
+      { icon: TestTube, label: "Blood Tests", path: "/tests" },
+      { icon: FileText, label: "Reports", path: "/reports" },
+      { icon: Shield, label: "Verification", path: "/verification" },
     ],
-    'Nurse': [
-      { icon: Activity, label: 'Dashboard', path: '/dashboard' },
-      { icon: ClipboardCheck, label: 'Tasks', path: '/tasks' },
-      { icon: QrCode, label: 'QR Scanner', path: '/scanner' },
-      { icon: Users, label: 'Patients', path: '/patients' }
+    Nurse: [
+      { icon: Activity, label: "Dashboard", path: "/dashboard" },
+      { icon: ClipboardCheck, label: "Tasks", path: "/tasks" },
+      { icon: QrCode, label: "QR Scanner", path: "/scanner" },
+      { icon: Users, label: "Patients", path: "/patients" },
     ],
-    'Patient': [
-      { icon: Activity, label: 'Dashboard', path: '/dashboard' },
-      { icon: Calendar, label: 'Appointments', path: '/appointments' },
-      { icon: FileText, label: 'Consent Forms', path: '/consent' },
-      { icon: TestTube, label: 'Test Results', path: '/results' }
+    Patient: [
+      { icon: Activity, label: "Dashboard", path: "/dashboard" },
+      { icon: Calendar, label: "Appointments", path: "/appointments" },
+      { icon: FileText, label: "Consent Forms", path: "/consent" },
+      { icon: TestTube, label: "Test Results", path: "/results" },
     ],
-    'Lab Scientist': [
-      { icon: Activity, label: 'Dashboard', path: '/dashboard' },
-      { icon: TestTube, label: 'Test Requests', path: '/test-requests' },
-      { icon: Upload, label: 'Upload Results', path: '/upload' },
-      { icon: FileText, label: 'Reports', path: '/reports' }
+    "Lab Scientist": [
+      { icon: Activity, label: "Dashboard", path: "/dashboard" },
+      { icon: TestTube, label: "Test Requests", path: "/test-requests" },
+      { icon: Upload, label: "Upload Results", path: "/upload" },
+      { icon: FileText, label: "Reports", path: "/reports" },
     ],
-    'Supervisor': [
-      { icon: Activity, label: 'Dashboard', path: '/dashboard' },
-      { icon: FileText, label: 'Reports', path: '/reports' },
-      { icon: Shield, label: 'Verification', path: '/verification' },
-      { icon: Check, label: 'Approvals', path: '/approvals' }
-    ]
+    Supervisor: [
+      { icon: Activity, label: "Dashboard", path: "/dashboard" },
+      { icon: FileText, label: "Reports", path: "/reports" },
+      { icon: Shield, label: "Verification", path: "/verification" },
+      { icon: Check, label: "Approvals", path: "/approvals" },
+    ],
   };
 
   const items = menuItems[user?.role] || [];
@@ -176,23 +234,30 @@ const Sidebar = () => {
 // Login Component
 const LoginPage = () => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
 
-  const roles = ['Hospital Admin', 'Nurse', 'Doctor', 'Patient', 'Lab Scientist', 'Supervisor'];
+  const roles = [
+    "Hospital Admin",
+    "Nurse",
+    "Doctor",
+    "Patient",
+    "Lab Scientist",
+    "Supervisor",
+  ];
 
   const handleLogin = (e) => {
     e.preventDefault();
     if (email && password && selectedRole) {
-      const userData = { 
-        email, 
-        role: selectedRole, 
-        name: mockUsers[email]?.name || 'User Name' 
+      const userData = {
+        email,
+        role: selectedRole,
+        name: mockUsers[email]?.name || "User Name",
       };
       login(userData);
       // Force navigation to dashboard
-      window.location.href = '/dashboard';
+      window.location.href = "/dashboard";
     }
   };
 
@@ -205,7 +270,9 @@ const LoginPage = () => {
             <h1 className="text-2xl font-bold text-gray-900">Labsy</h1>
           </div>
           <CardTitle>Sign In</CardTitle>
-          <CardDescription>Access your drug trial management system</CardDescription>
+          <CardDescription>
+            Access your drug trial management system
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -268,47 +335,59 @@ const HospitalAdminDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-gray-900">Hospital Admin Dashboard</h2>
+        <h2 className="text-3xl font-bold text-gray-900">
+          Hospital Admin Dashboard
+        </h2>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
           Add New User
         </Button>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Active Trials</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">
+              Active Trials
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
             <Progress value={75} className="mt-2" />
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Patients</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">
+              Total Patients
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">462</div>
             <div className="text-xs text-gray-500 mt-1">+12 this week</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Staff Members</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">
+              Staff Members
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">28</div>
-            <div className="text-xs text-gray-500 mt-1">6 doctors, 12 nurses, 10 others</div>
+            <div className="text-xs text-gray-500 mt-1">
+              6 doctors, 12 nurses, 10 others
+            </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Pending Actions</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">
+              Pending Actions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">7</div>
@@ -316,7 +395,7 @@ const HospitalAdminDashboard = () => {
           </CardContent>
         </Card>
       </div>
-      
+
       <Card>
         <CardHeader>
           <CardTitle>Recent Actions</CardTitle>
@@ -336,19 +415,31 @@ const HospitalAdminDashboard = () => {
                 <TableCell>Dr. Michael Chen</TableCell>
                 <TableCell>Approved patient consent</TableCell>
                 <TableCell>2 hours ago</TableCell>
-                <TableCell><Badge className="bg-green-100 text-green-800">Completed</Badge></TableCell>
+                <TableCell>
+                  <Badge className="bg-green-100 text-green-800">
+                    Completed
+                  </Badge>
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Maria Garcia</TableCell>
                 <TableCell>Updated patient status</TableCell>
                 <TableCell>4 hours ago</TableCell>
-                <TableCell><Badge className="bg-green-100 text-green-800">Completed</Badge></TableCell>
+                <TableCell>
+                  <Badge className="bg-green-100 text-green-800">
+                    Completed
+                  </Badge>
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Dr. Emily Davis</TableCell>
                 <TableCell>Uploaded test results</TableCell>
                 <TableCell>6 hours ago</TableCell>
-                <TableCell><Badge className="bg-yellow-100 text-yellow-800">Pending Review</Badge></TableCell>
+                <TableCell>
+                  <Badge className="bg-yellow-100 text-yellow-800">
+                    Pending Review
+                  </Badge>
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -374,38 +465,50 @@ const DoctorDashboard = () => {
           </Button>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Pending Approvals</CardTitle>
-            <CardDescription>Patient consent forms requiring your approval</CardDescription>
+            <CardDescription>
+              Patient consent forms requiring your approval
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockPatients.filter(p => p.status === 'Pending').map((patient) => (
-                <div key={patient.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">{patient.name}</h4>
-                    <p className="text-sm text-gray-500">Trial: {patient.trial}</p>
+              {mockPatients
+                .filter((p) => p.status === "Pending")
+                .map((patient) => (
+                  <div
+                    key={patient.id}
+                    className="flex items-center justify-between p-3 border rounded-lg"
+                  >
+                    <div>
+                      <h4 className="font-medium">{patient.name}</h4>
+                      <p className="text-sm text-gray-500">
+                        Trial: {patient.trial}
+                      </p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        <Check className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="destructive">
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex space-x-2">
-                    <Button size="sm" variant="outline">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                      <Check className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="destructive">
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader>
             <CardTitle>Test Requests Status</CardTitle>
@@ -417,7 +520,9 @@ const DoctorDashboard = () => {
                   <p className="font-medium">Alice Johnson - Blood Panel</p>
                   <p className="text-sm text-gray-500">Requested 2 days ago</p>
                 </div>
-                <Badge className="bg-yellow-100 text-yellow-800">In Progress</Badge>
+                <Badge className="bg-yellow-100 text-yellow-800">
+                  In Progress
+                </Badge>
               </div>
               <div className="flex items-center justify-between">
                 <div>
@@ -451,7 +556,7 @@ const NurseDashboard = () => {
           QR Scanner
         </Button>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -462,31 +567,43 @@ const NurseDashboard = () => {
               <div className="flex items-center space-x-3 p-3 border rounded-lg">
                 <input type="checkbox" className="rounded" />
                 <div className="flex-1">
-                  <p className="font-medium">Patient injection - Alice Johnson</p>
-                  <p className="text-sm text-gray-500">Trial TRL-001 • 10:00 AM</p>
+                  <p className="font-medium">
+                    Patient injection - Alice Johnson
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Trial TRL-001 • 10:00 AM
+                  </p>
                 </div>
                 <Badge className="bg-red-100 text-red-800">High Priority</Badge>
               </div>
               <div className="flex items-center space-x-3 p-3 border rounded-lg">
                 <input type="checkbox" className="rounded" />
                 <div className="flex-1">
-                  <p className="font-medium">Vital signs check - Bob Williams</p>
-                  <p className="text-sm text-gray-500">Trial TRL-002 • 2:00 PM</p>
+                  <p className="font-medium">
+                    Vital signs check - Bob Williams
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Trial TRL-002 • 2:00 PM
+                  </p>
                 </div>
                 <Badge className="bg-yellow-100 text-yellow-800">Medium</Badge>
               </div>
               <div className="flex items-center space-x-3 p-3 border rounded-lg">
                 <input type="checkbox" className="rounded" />
                 <div className="flex-1">
-                  <p className="font-medium">Re-test blood sample - Carol Brown</p>
-                  <p className="text-sm text-gray-500">Trial TRL-001 • 4:00 PM</p>
+                  <p className="font-medium">
+                    Re-test blood sample - Carol Brown
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Trial TRL-001 • 4:00 PM
+                  </p>
                 </div>
                 <Badge className="bg-green-100 text-green-800">Normal</Badge>
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
@@ -517,7 +634,7 @@ const PatientDashboard = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold text-gray-900">Patient Dashboard</h2>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -531,12 +648,14 @@ const PatientDashboard = () => {
               <div>
                 <h3 className="font-bold text-lg">Trial ID: TRL-001</h3>
                 <p className="text-gray-600">COVID-19 Vaccine Phase III</p>
-                <Badge className="mt-2 bg-green-100 text-green-800">Active Participant</Badge>
+                <Badge className="mt-2 bg-green-100 text-green-800">
+                  Active Participant
+                </Badge>
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader>
             <CardTitle>Upcoming Appointments</CardTitle>
@@ -567,7 +686,7 @@ const PatientDashboard = () => {
           </CardContent>
         </Card>
       </div>
-      
+
       <Card>
         <CardHeader>
           <CardTitle>Consent Forms</CardTitle>
@@ -599,13 +718,15 @@ const LabScientistDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-gray-900">Lab Scientist Dashboard</h2>
+        <h2 className="text-3xl font-bold text-gray-900">
+          Lab Scientist Dashboard
+        </h2>
         <Button>
           <Upload className="mr-2 h-4 w-4" />
           Upload Results
         </Button>
       </div>
-      
+
       <Card>
         <CardHeader>
           <CardTitle>Test Requests</CardTitle>
@@ -628,7 +749,11 @@ const LabScientistDashboard = () => {
                 <TableCell>Complete Blood Panel</TableCell>
                 <TableCell>Dr. Michael Chen</TableCell>
                 <TableCell>Jan 20, 2024</TableCell>
-                <TableCell><Badge className="bg-yellow-100 text-yellow-800">In Progress</Badge></TableCell>
+                <TableCell>
+                  <Badge className="bg-yellow-100 text-yellow-800">
+                    In Progress
+                  </Badge>
+                </TableCell>
                 <TableCell>
                   <Button size="sm" variant="outline">
                     <Upload className="h-4 w-4" />
@@ -640,7 +765,11 @@ const LabScientistDashboard = () => {
                 <TableCell>Liver Function Test</TableCell>
                 <TableCell>Dr. Sarah Johnson</TableCell>
                 <TableCell>Jan 18, 2024</TableCell>
-                <TableCell><Badge className="bg-green-100 text-green-800">Completed</Badge></TableCell>
+                <TableCell>
+                  <Badge className="bg-green-100 text-green-800">
+                    Completed
+                  </Badge>
+                </TableCell>
                 <TableCell>
                   <Button size="sm" variant="outline">
                     <Eye className="h-4 w-4" />
@@ -652,7 +781,9 @@ const LabScientistDashboard = () => {
                 <TableCell>Kidney Function Test</TableCell>
                 <TableCell>Dr. Michael Chen</TableCell>
                 <TableCell>Jan 22, 2024</TableCell>
-                <TableCell><Badge className="bg-blue-100 text-blue-800">Scheduled</Badge></TableCell>
+                <TableCell>
+                  <Badge className="bg-blue-100 text-blue-800">Scheduled</Badge>
+                </TableCell>
                 <TableCell>
                   <Button size="sm" variant="outline" disabled>
                     <Clock className="h-4 w-4" />
@@ -671,13 +802,15 @@ const SupervisorDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-gray-900">Supervisor Dashboard</h2>
+        <h2 className="text-3xl font-bold text-gray-900">
+          Supervisor Dashboard
+        </h2>
         <Button>
           <Shield className="mr-2 h-4 w-4" />
           Blockchain Verification
         </Button>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -716,7 +849,7 @@ const SupervisorDashboard = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader>
             <CardTitle>Blockchain Verification</CardTitle>
@@ -732,9 +865,13 @@ const SupervisorDashboard = () => {
             <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
               <div className="flex items-center space-x-2">
                 <Check className="h-5 w-5 text-green-600" />
-                <span className="text-green-800 font-medium">Data Verified</span>
+                <span className="text-green-800 font-medium">
+                  Data Verified
+                </span>
               </div>
-              <p className="text-sm text-green-700 mt-1">All records match blockchain hash</p>
+              <p className="text-sm text-green-700 mt-1">
+                All records match blockchain hash
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -746,20 +883,20 @@ const SupervisorDashboard = () => {
 // Main Dashboard Component
 const Dashboard = () => {
   const { user } = useAuth();
-  
+
   const renderDashboard = () => {
     switch (user?.role) {
-      case 'Hospital Admin':
+      case "Hospital Admin":
         return <HospitalAdminDashboard />;
-      case 'Doctor':
+      case "Doctor":
         return <DoctorDashboard />;
-      case 'Nurse':
+      case "Nurse":
         return <NurseDashboard />;
-      case 'Patient':
+      case "Patient":
         return <PatientDashboard />;
-      case 'Lab Scientist':
+      case "Lab Scientist":
         return <LabScientistDashboard />;
-      case 'Supervisor':
+      case "Supervisor":
         return <SupervisorDashboard />;
       default:
         return <div>Dashboard not found for role: {user?.role}</div>;
@@ -771,9 +908,7 @@ const Dashboard = () => {
       <Header />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 p-6">
-          {renderDashboard()}
-        </main>
+        <main className="flex-1 p-6">{renderDashboard()}</main>
       </div>
     </div>
   );
@@ -786,7 +921,7 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     // Check for stored user data
-    const storedUser = localStorage.getItem('labsy-user');
+    const storedUser = localStorage.getItem("labsy-user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -795,12 +930,12 @@ const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem('labsy-user', JSON.stringify(userData));
+    localStorage.setItem("labsy-user", JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('labsy-user');
+    localStorage.removeItem("labsy-user");
   };
 
   if (isLoading) {
@@ -835,11 +970,22 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/upload"
+              element={
+                <ProtectedRoute>
+                  <UploadMedicalHistory />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>
