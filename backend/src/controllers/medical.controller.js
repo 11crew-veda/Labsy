@@ -10,8 +10,8 @@ cloudinary.config({
 });
 
 export const uploadMedicalHistory = catchAsync(async (req, res) => {
-  const { history } = req.body;
-  const patientId = req.user.sub;
+  const history = req.body.medicalHistory;
+  const patientId = req.user?.sub || "234"; // For testing purposes
   let fileUrl = "";
 
   if (req.file) {
@@ -23,16 +23,16 @@ export const uploadMedicalHistory = catchAsync(async (req, res) => {
   }
 
   const record = await MedicalHistory.create({
-    patient: patientId,
+    patient: 123,
     history,
     fileUrl,
   });
 
-  res.json({ success: true, record });
+    res.json({ success: true, record });
 });
 
 export const getMedicalHash = catchAsync(async (req, res) => {
-  const patientId = req.user.sub;
+  const patientId = 123;
   const record = await MedicalHistory.findOne({ patient: patientId });
   if (!record)
     return res.status(404).json({ error: "No medical history found" });

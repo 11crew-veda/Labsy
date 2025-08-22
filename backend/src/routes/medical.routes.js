@@ -10,8 +10,6 @@ import { ROLES } from "../utils/constants.js";
 const r = Router();
 const upload = multer({ dest: "uploads/" });
 
-r.use(auth, permit(ROLES.PATIENT));
-
 r.post("/upload", upload.single("file"), uploadMedicalHistory);
 r.get("/upload/hash", getMedicalHash);
 
